@@ -14,6 +14,7 @@ import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
 from .populate import initiate
+from .restapis import get_request, analyze_review_sentiments, post_review
 
 from .models import CarMake, CarModel
 
@@ -109,6 +110,23 @@ def get_dealer_reviews(request, dealer_id):
         endpoint = "/fetchReviews/dealer/"+str(dealer_id)
         reviews = get_request(endpoint)
         for review_detail in reviews:
+            # dealer_review = {
+            #     "id": review_detail["id"],
+            #     "name": review_detail["name"],
+            #     "dealership": review_detail["dealership"],
+            #     "review": review_detail["review"],
+            #     "purchase": review_detail.get("purchase"),
+            #     "purchase_date": review_detail.get("purchase_date"),
+            #     "car_make": review_detail.get("car_make"),
+            #     "car_model": review_detail.get("car_model"),
+            #     "car_year": review_detail.get("car_year"),
+            #     "sentiment":"",
+            # }
+
+            # dealer_review['sentiment'] = analyze_review_sentiments(review_detail['review'])
+            # print(dealer_review['sentiment'])
+            # review_detail.update({'sentiment':dealer_review['sentiment']})
+
             response = analyze_review_sentiments(review_detail['review'])
             print(response)
             review_detail['sentiment'] = response['sentiment']
